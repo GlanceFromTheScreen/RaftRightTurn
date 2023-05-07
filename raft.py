@@ -1,12 +1,17 @@
 from One_D_Problem_file import *
 
+
 FUN1 = lambda t: 1  # ...заптсываем в начале файла функции ограничений для каждого из этапов (на каждый этап по две-три?)
 
 
+def phi1_stage_1(w, h, a, q, t):
+    return w + h + t
+
+
 class raft:
-    def __init__(self):
-        self.params_is_fixed = {'w': None, 'h': None, 'a': None, 'q': 34}  # None => unfixed param
-        self.params_values = {'w': 0, 'h': 0, 'a': 0, 'q': 34}  #  потом сделать repalce None на 0 (без хардкода)
+    def __init__(self, param_dict):
+        self.params_is_fixed = param_dict
+        self.params_values = {k: w or 0 for(k, w) in self.params_is_fixed.items}
 
     def square(self):
         return self.params_values['w'] * self.params_values['h'] +\
@@ -20,20 +25,28 @@ class raft:
 
 
 class river_turn:
-    def __init__(self):
-        self.corner_coords = [1, 1]  # z1, z2
+    def __init__(self, z1, z2):
+        self.corner_coords = [z1, z2]
 
 
 class raft_makes_right_turn:  # или лучше отнаследоваться?
-    def __init__(self):
+    def __init__(self, z1, z2, param_dict):
         self.accuracy = 0.001  # точность, с которой мы будем решать задачу. Согласовать её с этапами
-        self.my_raft = raft()  # здесь содержится максимизируемая функция
-        self.my_river = river_turn()
-        self.distance = lambda t: t**2  # потом настоящее представление этой фцнкции написать - брать данные из my_raft and my_river
+        self.my_river = river_turn(z1, z2)
+        self.my_raft = raft(param_dict)  # допустимая точка
+        #  меняем параметры плота - ставим допустмую точку
+
+        self.distance = lambda t: phi1_stage_1(self.my_raft.params_values['w'],
+                                               self.my_raft.params_values['h'],
+                                               self.my_raft.params_values['a'],
+                                               self.my_raft.params_values['q'],
+                                               t)
+        # потом настоящее представление этой фцнкции написать - брать данные из my_raft and my_river
 
         pr = One_D_Problem()
         pr.target_function = self.distance
         self.distance_min = pr.golden_search(self.accuracy)
+
         #  добавить ограничения на сами переменные (x,y) и на stages
 
         # предлагаю вывести здесь значения x, y, а потом отнаследоваться и сделать stages.
@@ -47,8 +60,15 @@ class raft_makes_right_turn:  # или лучше отнаследоваться
         # функции ограничений, мы таким образом переходим от stage к stage
 
 
+    def phi_gradient_evaluate(self):
+        eps = 0.01
+        return {'w': 0 if self.my_raft.params_is_fixed['w'] is not None else 1 / (2*eps) * (self.distance_min(self.my_raft.params_values['w'] + eps) - self.distance_min(self.my_raft.params_values['w'] - eps)),
+                'h': 0 if self.params_is_fixed['h'] is not None else self.params_values['w'],
+                'a': 0 if self.params_is_fixed['a'] is not None else self.params_values['q'],
+                'q': 0 if self.params_is_fixed['q'] is not None else self.params_values['a']}
+
 def stages_execute():
-    stage_1 = raft_makes_right_turn()
+    stage_1 = raft_makes_right_turn(10, 10, {'w': None, 'h': 2, 'a': None, 'q': None})  # передать координаты угла и параметры (словариком None / not None)
     #  определяю плот и реку
     #  определяю функции ограничения
     #  вычисляю решение. Если True, то
@@ -61,7 +81,7 @@ def stages_execute():
 
 # Test area
 
-raft1 = raft()
+raft1 = raft({'w': None, 'h': None, 'a': None, 'q': 34})
 raft1.params_values['w'] = 99
 print(raft1.gradient_evaluate())
 
