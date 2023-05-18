@@ -10,7 +10,7 @@ def plot_fun(t0, t1, t2, t3, t4, t5, func2, raft1, river1):
     x3 = [t4 + (t5 - t4)/n * i for i in range(n+1)]
     y1 = [phi1_stage_1(raft1, river1, x_) for x_ in x1]
     y2 = [func2(raft1, river1, x_) for x_ in x2]
-    y3 = [phi1_stage_3_a(raft1, river1, x_) for x_ in x3]
+    y3 = [phi1_stage_3(raft1, river1, x_) for x_ in x3]
     plt.plot(x1, y1, 'r')
     plt.plot([x2[i] + t1 - t2 for i in range(len(x2))], y2, 'g')
     plt.plot([x3[i] + t1 + (t3 - t2) - t4 for i in range(len(x2))], y3, 'b')

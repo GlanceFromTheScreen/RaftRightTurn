@@ -13,7 +13,7 @@ if __name__ == '__main__':
     print(t000, t111)
 
     plot_fun(t0, t1, t00, t11, t000, t111, phi1_stage_2_b, raft1, river1)
-    print('U: ', phi1_stage_3_a(raft1, river1, 10.64))
+    print('U: ', phi1_stage_3(raft1, river1, 10.64))
 
     print()
 
@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     print()
 
-    stage_3_b = raft_makes_right_turn_stage(raft1, river1, t000, t111, phi1_stage_3_a)
+    stage_3_b = raft_makes_right_turn_stage(raft1, river1, t000, t111, phi1_stage_3)
     t_star = stage_3_b.constraint(raft1)
     print(t_star)
     print(stage_3_b.phi_1(raft1, river1, t_star))
