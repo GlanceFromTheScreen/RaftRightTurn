@@ -1,6 +1,8 @@
 from one_d_min_lib.One_D_Problem_file import *
 import matplotlib.pyplot as plt
 from constraints import *
+import numpy as np
+from math import degrees
 
 
 def plot_fun(t0, t1, t2, t3, t4, t5, func2, raft1, river1):
@@ -15,6 +17,10 @@ def plot_fun(t0, t1, t2, t3, t4, t5, func2, raft1, river1):
     plt.plot([x2[i] + t1 - t2 for i in range(len(x2))], y2, 'g')
     plt.plot([x3[i] + t1 + (t3 - t2) - t4 for i in range(len(x2))], y3, 'b')
     plt.show()
+
+
+
+
 
 
 class raft:

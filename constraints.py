@@ -2,17 +2,17 @@ from math import sqrt
 
 
 def phi1_stage_1(my_raft, my_river, t):  # n-s
-    x = sqrt(my_raft.params_values['w'] ** 2 + my_raft.params_values['h'] ** 2)
-    y = my_raft.params_values['w']
-    s = sqrt(my_raft.params_values['w'] ** 2 / 4 + (my_raft.params_values['h'] + my_raft.params_values['q']) ** 2)
+    nx = sqrt(my_raft.params_values['w'] ** 2 + my_raft.params_values['h'] ** 2)
+    ny = my_raft.params_values['w']
+    ns = sqrt(my_raft.params_values['w'] ** 2 / 4 + (my_raft.params_values['h'] + my_raft.params_values['q']) ** 2)
     cos_a, sin_a = my_raft.corner_alpha()
     cos_g, sin_g = my_raft.corner_gamma()
     z_1 = my_river.corner_coords[0]
     z_2 = my_river.corner_coords[1]
-    x_1 = (x / s) * (t * cos_g + sqrt(s ** 2 - t ** 2) * sin_g)
-    x_2 = (x / s) * (t * sin_g - sqrt(s ** 2 - t ** 2) * cos_g) + sqrt(s ** 2 - t ** 2)
-    y_1 = (y / s) * (t * cos_a + sqrt(s ** 2 - t ** 2) * sin_a)
-    y_2 = (y / s) * (t * sin_a - sqrt(s ** 2 - t ** 2) * cos_a) + sqrt(s ** 2 - t ** 2)
+    x_1 = (nx / ns) * (t * cos_g + sqrt(ns ** 2 - t ** 2) * sin_g)
+    x_2 = (nx / ns) * (t * sin_g - sqrt(ns ** 2 - t ** 2) * cos_g) + sqrt(ns ** 2 - t ** 2)
+    y_1 = (ny / ns) * (t * cos_a + sqrt(ns ** 2 - t ** 2) * sin_a)
+    y_2 = (ny / ns) * (t * sin_a - sqrt(ns ** 2 - t ** 2) * cos_a) + sqrt(ns ** 2 - t ** 2)
 
     return z_1 - 1 / (x_2 - y_2) * ((z_2 - y_2) * x_1 + (x_2 - z_2) * y_1)
 

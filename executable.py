@@ -1,4 +1,5 @@
 from raft import *
+from raft_parametrs import *
 
 if __name__ == '__main__':
     raft1 = raft({'w': 4, 'h': 2, 'a': 2, 'q': 3})
@@ -18,7 +19,7 @@ if __name__ == '__main__':
         t_star_1 = stage_1.constraint(raft_tmp)
         d1 = stage_1.phi_1(raft_tmp, river1, t_star_1)
 
-        if raft_tmp.stages_sequence():
+        if not raft_tmp.stages_sequence():
             t00, t11 = raft_tmp.find_t0_t1('2_b')
             stage_2 = raft_makes_right_turn_stage(raft_tmp, river1, t00, t11, phi1_stage_2_b)
             t_star_2 = stage_2.constraint(raft_tmp)
@@ -57,6 +58,8 @@ if __name__ == '__main__':
 
     print(distance)
     print(raft1.params_values)
+
+    print('\ncenter move (c_1, c_2) and alfa:\n', get_data_for_visualization(raft1, river1))
         
         
         
