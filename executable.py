@@ -2,8 +2,8 @@ from raft import *
 from raft_parametrs import *
 
 if __name__ == '__main__':
-    raft1 = raft({'w': 4, 'h': 2, 'a': 2, 'q': 3})
-    river1 = river_turn(8, 5)
+    raft1 = raft({'w': 40, 'h': 20, 'a': 20, 'q': 30})
+    river1 = river_turn(80, 50)
     eps = 0.1
     param = 'h'
     lmd = 2
@@ -59,7 +59,9 @@ if __name__ == '__main__':
     print(distance)
     print(raft1.params_values)
 
-    print('\ncenter move (c_1, c_2) and alfa:\n', get_data_for_visualization(raft1, river1))
+    print('\ncenter move (c_1, c_2) and alfa:\n')
+    for item in get_data_for_visualization(raft1, river1):
+        print(item)
         
         
         

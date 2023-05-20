@@ -61,8 +61,11 @@ class raft:
         W = A ** 2 * wm ** 2 - z2 ** 2
         D = M ** 2 + 4 * W * R
 
-        t_max = (M + sqrt(D)) / (2 * R)  # y2 < z2
-        # y_2 = (wy / wm) * (t_max * sin_mwy - sqrt(wm ** 2 - t_max ** 2) * cos_mwy) + sqrt(wm ** 2 - t_max ** 2)
+        try:
+            t_max = (M + sqrt(D)) / (2 * R)  # y2 < z2
+            # y_2 = (wy / wm) * (t_max * sin_mwy - sqrt(wm ** 2 - t_max ** 2) * cos_mwy) + sqrt(wm ** 2 - t_max ** 2)
+        except:
+            t_max = -1
 
         if stage == '1':
             t0 = self.params_values['w'] / 2
