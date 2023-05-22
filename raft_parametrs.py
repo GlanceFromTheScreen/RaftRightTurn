@@ -61,7 +61,7 @@ def get_data_for_visualization(my_raft, my_river):
         y_2 = lambda t: (ny / nm) * (1 * t + 0) + sqrt(nm ** 2 - t ** 2)
 
         c_1 += [0.5 * x_1(t_) for t_ in t0011]
-        c_2 += [0.5 * sqrt(nx ** 2 - t_ ** 2) + 0.5 * x_2(t_) for t_ in t0011]
+        c_2 += [0.5 * sqrt(nm ** 2 - t_ ** 2) + 0.5 * x_2(t_) for t_ in t0011]
 
         alf += [degrees(np.arccos((y_1(t_) * 1 - t_ * 0) / ny)) for t_ in t0011]
 
