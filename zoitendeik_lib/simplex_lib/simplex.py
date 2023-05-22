@@ -1,32 +1,31 @@
 import numpy as np
-from prettytable import PrettyTable
-from simplex_lib.preprocessing import Update_C
+from zoitendeik_lib.simplex_lib.preprocessing import Update_C
 
 
-def step_print(A, b, c, c0, base_indexes):
-
-    A_print = np.zeros((A.shape[0] + 2) * (A.shape[1] + 2)).reshape(A.shape[0] + 2, A.shape[1] + 2)
-    A_print = A_print.astype(str)
-    for i in range(A.shape[0]):
-        for j in range(A.shape[1]):
-            A_print[i][j] = A[i][j]
-        A_print[i, -2] = '='
-        A_print[i, -1] = b[i]
-    for j in range(A.shape[1]):
-        A_print[-2][j] = ' '
-        A_print[-1][j] = c[j]
-    A_print[-1, -1] = -c0
-    A_print[-1, -2] = '->'
-    A_print[-2, [-2, -1]] = ' '
-
-    table = PrettyTable()
-    table.header = False
-    table.add_rows(A_print)
-    print('Матрица ограничений:')
-    print(table)
-    print('Базисные индексы:')
-    print(base_indexes)
-    print('\n\n')
+# def step_print(A, b, c, c0, base_indexes):
+#
+#     A_print = np.zeros((A.shape[0] + 2) * (A.shape[1] + 2)).reshape(A.shape[0] + 2, A.shape[1] + 2)
+#     A_print = A_print.astype(str)
+#     for i in range(A.shape[0]):
+#         for j in range(A.shape[1]):
+#             A_print[i][j] = A[i][j]
+#         A_print[i, -2] = '='
+#         A_print[i, -1] = b[i]
+#     for j in range(A.shape[1]):
+#         A_print[-2][j] = ' '
+#         A_print[-1][j] = c[j]
+#     A_print[-1, -1] = -c0
+#     A_print[-1, -2] = '->'
+#     A_print[-2, [-2, -1]] = ' '
+#
+#     table = PrettyTable()
+#     table.header = False
+#     table.add_rows(A_print)
+#     print('Матрица ограничений:')
+#     print(table)
+#     print('Базисные индексы:')
+#     print(base_indexes)
+#     print('\n\n')
 
 
 def create_list_for_leader_line(b_free_chlens, leader_column, B_index_ones, A_matrix):
@@ -106,7 +105,7 @@ def Simplex(A_matrix, b_free_chlens, B_index_ones, C_deal_func, C_deal_free_chle
     """
     Функция Simplex - см. Корман Simplex без инициализации
     """
-    while not all(x >= -10**(-15) for x in C_deal_func):
+    while not all(x >= -10**(-14) for x in C_deal_func):
         leader_column = min(range(len(C_deal_func)), key=C_deal_func.__getitem__)
         leader_line = create_list_for_leader_line(b_free_chlens, leader_column, B_index_ones, A_matrix)
         try:

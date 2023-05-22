@@ -72,3 +72,8 @@ def phi1_stage_3(my_raft, my_river, t):  # w-s
     y_2 = (wy / wm) * (t * sin_mwy - sqrt(wm ** 2 - t ** 2) * cos_mwy) + sqrt(wm ** 2 - t ** 2)
 
     return z_1 - 1 / (x_2 - y_2) * ((z_2 - y_2) * x_1 + (x_2 - z_2) * y_1)
+
+
+
+
+

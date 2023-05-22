@@ -1,6 +1,6 @@
 import numpy as np
-from simplex_lib.preprocessing import Make_Canon_Form, Update_C
-from simplex_lib.simplex import Simplex_With_Init, Recover_Initial_Variables
+from zoitendeik_lib.simplex_lib.preprocessing import Make_Canon_Form, Update_C
+from zoitendeik_lib.simplex_lib.simplex import Simplex_With_Init, Recover_Initial_Variables
 from itertools import combinations
 
 np.seterr(divide='ignore', invalid='ignore')
@@ -14,14 +14,14 @@ def norma_calculate(v):
 
 
 class Target_function:
-    def __init__(self, f_, grad_, R=10):
+    def __init__(self, f_, grad_, R=1):
         self.f = f_
         self.grad = grad_
         self.R = R  # предполагается, что потом надо изменить
 
 
 class Constraint:
-    def __init__(self, type_, phi_, grad_, R=10, K=10):
+    def __init__(self, type_, phi_, grad_, R=1, K=1):
         self.type = type_  # eq / ineq
         self.phi = phi_
         self.grad = grad_
@@ -212,22 +212,35 @@ class Zoitendeik_step:
 
         return super_task.x[:-1]
 
-    def minimize(self):
+    def minimize(self, eps=0.5):
         self.I_upd()
-        self.x = self.find_x0()
+        # self.x = self.find_x0()
+        # self.x = [15.0, 10.0, 4.0, 2.0]
         self.print_params()
         i = 0
         while True:  # поставить нормальное условие
             print('N:', i)
+
             self.I_upd()
             self.s_upd()
             self.lmd_upd()
+            self.print_params()
             self.x_upd()
 
-            self.print_params()
-            i += 1
-            if i == 70:
+            if self.eta == 0 and self.dlt < eps and self.dlt < -1 * max([self.phi_list[j].phi(self.x) for j in self.Id]):
+                print('THE END by ETA = 0')
                 break
+
+            if -self.eta < eps and self.dlt < eps:  # если решение - внутри области
+                print('THE END by POINT INSIDE SUSPECT')
+                break
+
+            i += 1
+            if i == 300:  # условие на случай, если оптимум не заключен между двумя ограничениями
+                print('THE END by i')
+                break
+
+        return self.x
 
     def print_params(self):
         print('x', self.x)

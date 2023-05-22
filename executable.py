@@ -1,6 +1,7 @@
 from main_algorithm import start_raft
-from raft import raft, river_turn
+from raft import raft, river_turn, nabla_phi
 from vizualization_lib.raft_visualisation.main import vizualization
+from constraints import *
 
 
 if __name__ == '__main__':
@@ -13,4 +14,4 @@ if __name__ == '__main__':
     vizualization(move_params[0], move_params[1], move_params[2],
                   raft11.params_values, river11.corner_coords)
 
-
+    print(nabla_phi('1', phi1_stage_1, raft11, river11))

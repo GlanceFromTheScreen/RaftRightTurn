@@ -157,3 +157,33 @@ class raft_makes_right_turn_stage:
     def constraint(self, my_raft):
         pr = One_D_Problem(self.t0, self.t1, lambda t: self.phi_1(my_raft, self.my_river, t))
         return pr.golden_search(self.accuracy)[0]
+
+
+def nabla_phi(stage, phi, my_raft_params_array, my_river):
+    my_raft = raft({'w': my_raft_params_array[0],
+                    'h': my_raft_params_array[1],
+                    'a': my_raft_params_array[2],
+                    'q': my_raft_params_array[3]})
+
+    nbl = []
+    for key in my_raft.params_values.keys():
+        tmp_raft = raft(my_raft.params_values)
+        tmp_raft.params_values[key] += 0.01
+
+        t0, t1 = my_raft.find_t0_t1(f'{stage}')
+        t00, t11 = tmp_raft.find_t0_t1(f'{stage}')
+        stage_1 = raft_makes_right_turn_stage(my_raft, my_river, t0, t1, phi)
+        stage_1_ = raft_makes_right_turn_stage(tmp_raft, my_river, t00, t11, phi)
+
+        t_star_1 = stage_1.constraint(my_raft)
+        d1 = stage_1.phi_1(my_raft, my_river, t_star_1)
+
+        t_star_1_ = stage_1_.constraint(tmp_raft)
+        d1_ = stage_1_.phi_1(tmp_raft, my_river, t_star_1_)
+
+        nbl.append(-1 * (d1_ - d1) / 0.01)
+
+    return nbl
+
+
+
