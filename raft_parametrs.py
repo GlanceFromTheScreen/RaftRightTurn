@@ -70,24 +70,26 @@ def get_data_for_visualization(my_raft, my_river):
 
     '''--st3---'''
 
-    wx = sqrt(my_raft.params_values['w'] ** 2 / 4 + (my_raft.params_values['h'] + my_raft.params_values['q']) ** 2)
-    wy = sqrt(my_raft.params_values['q'] ** 2 + my_raft.params_values['w'] ** 2 / 4)
-    wm = wx
-    xy = my_raft.params_values['h']
-    cos_xwy = (-my_raft.params_values['h'] ** 2 + wy ** 2 + wx ** 2) / (2 * wx * wy)  # minus!!!!!!!!
-    sin_xwy = sqrt(1 - cos_xwy ** 2)
-    cos_mwx = 1 - 2 * (my_raft.params_values['w'] / (2 * wx)) ** 2  # 1 - 2sin^2(a/2)
-    sin_mwx = sqrt(1 - cos_mwx ** 2)
-    cos_mwy, sin_mwy = cos_mwx * cos_xwy - sin_mwx * sin_xwy, sin_mwx * cos_xwy + cos_mwx * sin_xwy
+    if t111 > t000:
 
-    x_1 = lambda t: (wx / wm) * (t * cos_mwx + sqrt(wm ** 2 - t ** 2) * sin_mwx)
-    x_2 = lambda t: (wx / wm) * (t * sin_mwx - sqrt(wm ** 2 - t ** 2) * cos_mwx) + sqrt(wm ** 2 - t ** 2)
-    y_1 = lambda t: (wy / wm) * (t * cos_mwy + sqrt(wm ** 2 - t ** 2) * sin_mwy)
-    y_2 = lambda t: (wy / wm) * (t * sin_mwy - sqrt(wm ** 2 - t ** 2) * cos_mwy) + sqrt(wm ** 2 - t ** 2)
+        wx = sqrt(my_raft.params_values['w'] ** 2 / 4 + (my_raft.params_values['h'] + my_raft.params_values['q']) ** 2)
+        wy = sqrt(my_raft.params_values['q'] ** 2 + my_raft.params_values['w'] ** 2 / 4)
+        wm = wx
+        xy = my_raft.params_values['h']
+        cos_xwy = (-my_raft.params_values['h'] ** 2 + wy ** 2 + wx ** 2) / (2 * wx * wy)  # minus!!!!!!!!
+        sin_xwy = sqrt(1 - cos_xwy ** 2)
+        cos_mwx = 1 - 2 * (my_raft.params_values['w'] / (2 * wx)) ** 2  # 1 - 2sin^2(a/2)
+        sin_mwx = sqrt(1 - cos_mwx ** 2)
+        cos_mwy, sin_mwy = cos_mwx * cos_xwy - sin_mwx * sin_xwy, sin_mwx * cos_xwy + cos_mwx * sin_xwy
 
-    c_1 += [0.5 * y_1(t_) + 0.5 * t_ for t_ in t000111]
-    c_2 += [0.5 * y_2(t_) + 0.5 * 0 for t_ in t000111]
+        x_1 = lambda t: (wx / wm) * (t * cos_mwx + sqrt(wm ** 2 - t ** 2) * sin_mwx)
+        x_2 = lambda t: (wx / wm) * (t * sin_mwx - sqrt(wm ** 2 - t ** 2) * cos_mwx) + sqrt(wm ** 2 - t ** 2)
+        y_1 = lambda t: (wy / wm) * (t * cos_mwy + sqrt(wm ** 2 - t ** 2) * sin_mwy)
+        y_2 = lambda t: (wy / wm) * (t * sin_mwy - sqrt(wm ** 2 - t ** 2) * cos_mwy) + sqrt(wm ** 2 - t ** 2)
 
-    alf += [degrees(np.arccos((-(x_2(t_) - y_2(t_)) * 1 - (x_1(t_) - y_1(t_)) * 0) / xy)) for t_ in t000111]
+        c_1 += [0.5 * y_1(t_) + 0.5 * t_ for t_ in t000111]
+        c_2 += [0.5 * y_2(t_) + 0.5 * 0 for t_ in t000111]
+
+        alf += [degrees(np.arccos((-(x_2(t_) - y_2(t_)) * 1 - (x_1(t_) - y_1(t_)) * 0) / xy)) for t_ in t000111]
 
     return c_1, c_2, alf

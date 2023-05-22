@@ -1,15 +1,16 @@
 from one_d_min_lib.One_D_Problem_file import *
 import matplotlib.pyplot as plt
 from constraints import *
-import numpy as np
-from math import degrees
 
 
 def plot_fun(t0, t1, t2, t3, t4, t5, func2, raft1, river1):
+    """
+    строит график расстояния от плота до берега при значении параметра t
+    """
     n = 20
-    x1 = [t0 + (t1 - t0)/n * i for i in range(n+1)]
-    x2 = [t2 + (t3 - t2)/n * i for i in range(n+1)]
-    x3 = [t4 + (t5 - t4)/n * i for i in range(n+1)]
+    x1 = [t0 + (t1 - t0) / n * i for i in range(n + 1)]
+    x2 = [t2 + (t3 - t2) / n * i for i in range(n + 1)]
+    x3 = [t4 + (t5 - t4) / n * i for i in range(n + 1)]
     y1 = [phi1_stage_1(raft1, river1, x_) for x_ in x1]
     y2 = [func2(raft1, river1, x_) for x_ in x2]
     y3 = [phi1_stage_3(raft1, river1, x_) for x_ in x3]
@@ -19,26 +20,23 @@ def plot_fun(t0, t1, t2, t3, t4, t5, func2, raft1, river1):
     plt.show()
 
 
-
-
-
-
 class raft:
     def __init__(self, param_dict):
         self.params_is_fixed = param_dict
-        self.params_values = {k: w or 0.1 for (k, w) in self.params_is_fixed.items()}  # НИКОГДА НЕ МЕНЯТЬ!!!!
+        self.params_values = {k: w or 0.1 for (k, w) in self.params_is_fixed.items()}
 
     def square(self):
+        """
+        площадь плота
+        """
         return self.params_values['w'] * self.params_values['h'] + \
                self.params_values['a'] * self.params_values['q']
 
-    def gradient_evaluate(self):
-        return {'w': 0 if self.params_is_fixed['w'] is not None else self.params_values['h'],
-                'h': 0 if self.params_is_fixed['h'] is not None else self.params_values['w'],
-                'a': 0 if self.params_is_fixed['a'] is not None else self.params_values['q'],
-                'q': 0 if self.params_is_fixed['q'] is not None else self.params_values['a']}
-
     def find_t0_t1(self, stage, z2=0):
+        """
+        Определение t0 и t1 - границ для решения задачи одномерной минимизации.
+        По сути при граничных значениях мы получаем пограничное положение плота между stage-ами
+        """
         ns = sqrt((self.params_values['w'] ** 2) / 4 + (self.params_values['h'] + self.params_values['q']) ** 2)
         nm = self.params_values['h']
         wm = ns
@@ -103,8 +101,8 @@ class raft:
     def corner_gamma(self):
         cos_gamma = (self.params_values['w'] ** 2 + 2 * self.params_values['h'] ** 2 + 2 * self.params_values['h'] *
                      self.params_values['q']) / (2 * (
-                    sqrt(self.params_values['w'] ** 2 + self.params_values['h'] ** 2) * sqrt(
-                ((self.params_values['w'] ** 2) / 4) + (self.params_values['h'] + self.params_values['q']) ** 2)))
+                sqrt(self.params_values['w'] ** 2 + self.params_values['h'] ** 2) * sqrt(
+            ((self.params_values['w'] ** 2) / 4) + (self.params_values['h'] + self.params_values['q']) ** 2)))
         sin_gamma = sqrt(1 - cos_gamma ** 2)
         return cos_gamma, sin_gamma
 
@@ -128,6 +126,9 @@ class raft:
         return cos_betta, sin_betta
 
     def stages_sequence(self):
+        """
+        метод определяет, какая последовательность stage-й будет у данной конфигурации плота
+        """
         s = sqrt((self.params_values['w'] ** 2) / 4 +
                  (self.params_values['h'] + self.params_values['q']) ** 2)
         m = self.params_values['h']
@@ -156,23 +157,3 @@ class raft_makes_right_turn_stage:
     def constraint(self, my_raft):
         pr = One_D_Problem(self.t0, self.t1, lambda t: self.phi_1(my_raft, self.my_river, t))
         return pr.golden_search(self.accuracy)[0]
-
-    def one_d_grad(self, param, eps):
-        tmp_raft_minus_delta = self.my_raft
-        tmp_raft_minus_delta.params_values[f'{param}'] = self.my_raft.params_values[f'{param}'] - eps
-        tmp_raft_plus_delta = self.my_raft
-        tmp_raft_plus_delta.params_values[f'{param}'] = self.my_raft.params_values[f'{param}'] + eps
-        return 0 if self.my_raft.params_is_fixed[f'{param}'] is not None else \
-            1 / (2 * eps) * (self.constraint(tmp_raft_plus_delta) - self.constraint(tmp_raft_minus_delta))
-
-    def phi_gradient_evaluate(self):
-        eps = 0.01
-        return {'w': self.one_d_grad('w', eps),
-                'h': self.one_d_grad('h', eps),
-                'a': self.one_d_grad('a', eps),
-                'q': self.one_d_grad('q', eps)}
-
-
-
-
-
