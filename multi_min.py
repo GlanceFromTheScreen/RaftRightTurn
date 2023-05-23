@@ -7,6 +7,11 @@ from raft_parametrs import get_data_for_visualization
 
 
 def super_fun(stage, phi, my_raft_params_array, my_river):
+    """
+    На вход получаем массив значений конфигурации, а также этап.
+    Строим плот и считаем значение минимального расстояния на данном этапе.
+    Его и возвращаем.
+    """
     my_raft = raft({'w': my_raft_params_array[0],
                     'h': my_raft_params_array[1],
                     'a': my_raft_params_array[2],
@@ -20,6 +25,9 @@ def super_fun(stage, phi, my_raft_params_array, my_river):
 
 
 def arr_stage_sequence(arr):
+    """
+    Создаем плот по массиву
+    """
     my_raft = raft({'w': arr[0],
                     'h': arr[1],
                     'a': arr[2],
@@ -29,8 +37,8 @@ def arr_stage_sequence(arr):
 
 if __name__ == '__main__':
     raft11 = raft({'w': 20, 'h': 40, 'a': 20, 'q': 20})
-    river11 = river_turn(40, 60)
-    eps11 = 2
+    river11 = river_turn(40, 40)
+    eps11 = 1
 
     phi0 = Target_function(lambda x: -1 * (x[0] * x[1] + x[2] * x[3]),
                            lambda x: [-x[1], -x[0], -x[3], -x[2]])
