@@ -30,27 +30,26 @@ def arr_stage_sequence(arr):
 if __name__ == '__main__':
     raft11 = raft({'w': 20, 'h': 40, 'a': 20, 'q': 20})
     river11 = river_turn(40, 60)
-    eps11 = 0.1
-    param11 = 'q'
+    eps11 = 2
 
     phi0 = Target_function(lambda x: -1 * (x[0] * x[1] + x[2] * x[3]),
                            lambda x: [-x[1], -x[0], -x[3], -x[2]])
 
     phi1 = Constraint('ineq',
-                      lambda x: -1 * super_fun('1', phi1_stage_1, x, river11),
+                      lambda x: -1 * super_fun('1', phi1_stage_1, x, river11) + eps11,
                       lambda x: nabla_phi('1', phi1_stage_1, x, river11))
 
     phi2 = Constraint('ineq',
-                      lambda x: -x[0] + x[2],
+                      lambda x: -x[0] + x[2] + eps11,
                       lambda x: [-1, 0, 1, 0])
 
     phi3 = Constraint('ineq',
-                      lambda x: -1 * super_fun('2_a', phi1_stage_2_a, x, river11) if arr_stage_sequence(x) else -1 * super_fun('2_b', phi1_stage_2_b, x, river11),
+                      lambda x: -1 * super_fun('2_a', phi1_stage_2_a, x, river11) + eps11 if arr_stage_sequence(x) else -1 * super_fun('2_b', phi1_stage_2_b, x, river11) + eps11,
                       lambda x: nabla_phi('2_a', phi1_stage_2_a, x, river11) if arr_stage_sequence(x) else nabla_phi('2_b', phi1_stage_2_b, x, river11))
 
     phi4 = Constraint('ineq',
-                      lambda x: -1 * super_fun('3_a', phi1_stage_3, x, river11) if arr_stage_sequence(
-                          x) else -1 * super_fun('3_b', phi1_stage_3, x, river11),
+                      lambda x: -1 * super_fun('3_a', phi1_stage_3, x, river11) + eps11 if arr_stage_sequence(
+                          x) else -1 * super_fun('3_b', phi1_stage_3, x, river11) + eps11,
                       lambda x: nabla_phi('3_a', phi1_stage_3, x, river11) if arr_stage_sequence(x) else nabla_phi(
                           '3_b', phi1_stage_3, x, river11))
 
