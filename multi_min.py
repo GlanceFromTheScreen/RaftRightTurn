@@ -36,9 +36,9 @@ def arr_stage_sequence(arr):
 
 
 if __name__ == '__main__':
-    raft11 = raft({'w': 20, 'h': 40, 'a': 20, 'q': 20})
-    river11 = river_turn(40, 40)
-    eps11 = 1
+    raft11 = raft({'w': 30, 'h': 40, 'a': 20, 'q': 20})
+    river11 = river_turn(40, 60)
+    eps11 = 0.1
 
     phi0 = Target_function(lambda x: -1 * (x[0] * x[1] + x[2] * x[3]),
                            lambda x: [-x[1], -x[0], -x[3], -x[2]])
@@ -61,7 +61,7 @@ if __name__ == '__main__':
                       lambda x: nabla_phi('3_a', phi1_stage_3, x, river11) if arr_stage_sequence(x) else nabla_phi(
                           '3_b', phi1_stage_3, x, river11))
 
-    z = Zoitendeik_step(phi0, [phi1, phi2, phi3, phi4], [5.0, 20.0, 5.0, 5.0], 0.25, 0.5)
+    z = Zoitendeik_step(phi0, [phi1, phi2, phi3, phi4], [20.0, 70.0, 5.0, 5.0], 0.25, 0.5)
 
     x_ = z.minimize()
 
